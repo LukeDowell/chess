@@ -3,7 +3,6 @@ package dev.dowell.chess
 data class Board(var pieces: List<Piece> = listOf()) {
     companion object {
         val emptyBoard: Board = Board()
-        fun of(vararg pieces: Piece): Board = Board(pieces.asList())
     }
 }
 
@@ -27,11 +26,13 @@ enum class Color {
 }
 
 enum class PieceType {
-    PAWN;
+    PAWN,
+    KNIGHT,
+    BISHOP,
+    ROOK
 }
 
 data class Position(val x: Int, val y: Int)
-data class MoveHistory(val from: String, val to: String)
 
 data class Piece(val position: Position, val color: Color = Color.BLACK, val type: PieceType = PieceType.PAWN) {
     companion object {

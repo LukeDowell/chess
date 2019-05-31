@@ -32,18 +32,4 @@ class BoardTests {
         board = Board.emptyBoard
         assertFalse(board.movePiece(Position(x = 0, y = 0), Position(x = 1, y = 1)))
     }
-
-    @Test
-    fun cannot_move_piece_to_occupied_location() {
-        val posOne = Position(x = 0, y = 0)
-        val posTwo = Position(x = 1, y = 1)
-        board = Board.of(Piece.at(posOne), Piece.at(posTwo))
-        assertFalse(board.movePiece(posOne, posTwo))
-    }
-
-    private infix fun Board.shouldBe(other: Board): Unit = assertEquals(other, this)
-    private infix fun Board.with(piece: Piece): Board {
-        this.pieces += piece
-        return this
-    }
 }
