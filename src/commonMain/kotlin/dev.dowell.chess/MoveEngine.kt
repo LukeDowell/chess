@@ -23,7 +23,6 @@ object MoveEngine {
             PieceType.ROOK -> {}
         }
 
-
         return moves.filter { it.isOnBoard()  }
     }
 

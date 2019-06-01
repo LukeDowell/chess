@@ -2,10 +2,7 @@ package dev.dowell.chess
 
 import and
 import with
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class MoveEngineTests {
 
@@ -61,6 +58,20 @@ class MoveEngineTests {
         board = Board() with blackPawn and whitePawn
 
         assertTrue(MoveEngine.possibleMoves(board, blackPawn).contains(Position(x = 0, y = 5)))
+    }
+
+    @Test
+    fun bishop_moves_diagonally() {
+        val start = Position(x = 0, y = 0)
+        val bishop = Piece(position = start, type = PieceType.BISHOP)
+
+        board = Board() with bishop
+
+        val bottomLeftToTopRight = (0 until 8).map { Position(x = it, y = it) }
+        val topLeftToBottomRight = (7 downTo 0).map { Position(x = 7 - it, y = it ) }
+        val expectedMoves = (bottomLeftToTopRight + topLeftToBottomRight).distinct().filter { it != start }
+
+        assertEquals(expectedMoves, MoveEngine.possibleMoves(board, bishop))
     }
 
     @Test
