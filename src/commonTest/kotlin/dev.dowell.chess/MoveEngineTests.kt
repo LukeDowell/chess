@@ -4,6 +4,7 @@ import and
 import with
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class MoveEngineTests {
@@ -34,11 +35,23 @@ class MoveEngineTests {
     @Test
     fun pawn_can_move_twice_on_first_turn() {
         val blackPawn = Piece.at(x = 1, y = 6)
-        val whitePawn = Piece.at(x = 1, y = 1)
+        val whitePawn = Piece.at(x = 1, y = 1).copy(color = Color.WHITE)
+
         board = Board() with blackPawn and whitePawn
 
         assertTrue(MoveEngine.possibleMoves(board, blackPawn).contains(Position(x = 1, y = 4)))
         assertTrue(MoveEngine.possibleMoves(board, whitePawn).contains(Position(x = 1, y = 3)))
+    }
+
+    @Test
+    fun pawn_can_only_move_once_after_first_turn() {
+        val start = Position(x = 1, y = 6)
+        val blackPawn = Piece.at(start)
+        blackPawn.history += Move(start, start down 1)
+
+        board = Board() with blackPawn
+
+        assertFalse(MoveEngine.possibleMoves(board, blackPawn).contains(Position(x = 1, y = 3)))
     }
 
     @Test

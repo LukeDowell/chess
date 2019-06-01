@@ -4,29 +4,30 @@ object MoveEngine {
 
     fun possibleMoves(board: Board, piece: Piece): List<Position> {
         val start = piece.position
-        val potentialMoves = when(piece.type) {
+        val moves: MutableList<Position> = mutableListOf()
 
-            PieceType.PAWN -> when(piece.color) {
-                Color.BLACK -> listOf(start down 1)
-                Color.WHITE -> listOf(start up 1)
+        when(piece.type) {
+
+            PieceType.PAWN -> {
+                val hasNotMoved = piece.history.isEmpty()
+                val verticalModifier = if (piece.color == Color.BLACK) -1 else 1
+
+                moves += start moveVertically verticalModifier
+                if (hasNotMoved) moves += start moveVertically verticalModifier * 2
             }
 
-            PieceType.BISHOP -> listOf()
+            PieceType.BISHOP -> {}
 
-            PieceType.KNIGHT -> listOf()
+            PieceType.KNIGHT -> {}
 
-            PieceType.ROOK -> listOf()
+            PieceType.ROOK -> {}
         }
 
 
-        return potentialMoves.filter { it.isOnBoard()  }
+        return moves.filter { it.isOnBoard()  }
     }
 
-    private fun Position.isOnBoard(): Boolean = this.x in 1..7 && this.y in 1..7
+    private fun Position.isOnBoard(): Boolean = this.x in 0..7 && this.y in 0..7
 
-    private infix fun Position.up(i: Int): Position = Position(this.x, this.y + i)
-    private infix fun Position.down(i: Int): Position = Position(this.x, this.y - i)
-    private infix fun Position.left(i: Int): Position = Position(this.x - i, this.y)
-    private infix fun Position.right(i: Int): Position = Position(this.x + i, this.y)
-
+    private infix fun Position.moveVertically(i: Int): Position = this up i
 }
