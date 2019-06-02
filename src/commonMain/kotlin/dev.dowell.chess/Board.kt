@@ -4,6 +4,10 @@ data class Board(var pieces: List<Piece> = listOf()) {
     companion object {
         val emptyBoard: Board = Board()
     }
+
+    override fun toString(): String {
+        return super.toString()
+    }
 }
 
 fun Board.movePiece(from: Position, to: Position): Boolean {
@@ -20,25 +24,17 @@ fun Board.movePiece(from: Position, to: Position): Boolean {
             it.history += Move(from, to)
             it.copy(position = to)
         }
-        else {
-            it
-        }
+        else it
     }
 
     return true
-}
+}// TODO
 
-enum class Color {
-    WHITE,
-    BLACK;
-}
+infix fun Board.and(piece: Piece): Board { this.pieces += piece; return this }
+infix fun Board.with(piece: Piece): Board { this.pieces += piece; return this }
 
-enum class PieceType {
-    PAWN,
-    KNIGHT,
-    BISHOP,
-    ROOK
-}
+enum class Color { WHITE, BLACK; }
+enum class PieceType { PAWN, KNIGHT, BISHOP, ROOK }
 
 data class Position(val x: Int, val y: Int)
 infix fun Position.up(i: Int): Position = Position(this.x, this.y + i)

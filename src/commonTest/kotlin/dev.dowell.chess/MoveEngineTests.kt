@@ -1,7 +1,5 @@
 package dev.dowell.chess
 
-import and
-import with
 import kotlin.test.*
 
 class MoveEngineTests {
@@ -54,7 +52,7 @@ class MoveEngineTests {
     @Test
     fun pawn_can_attack_diagonally() {
         val blackPawn = Piece.at(x = 1, y = 6)
-        val whitePawn = Piece.at(x = 0, y = 5)
+        val whitePawn = Piece.at(x = 0, y = 5).copy(color = Color.WHITE)
         board = Board() with blackPawn and whitePawn
 
         assertTrue(MoveEngine.possibleMoves(board, blackPawn).contains(Position(x = 0, y = 5)))
@@ -62,16 +60,51 @@ class MoveEngineTests {
 
     @Test
     fun bishop_moves_diagonally() {
-        val start = Position(x = 0, y = 0)
+        val start = Position(x = 3, y = 3)
         val bishop = Piece(position = start, type = PieceType.BISHOP)
 
         board = Board() with bishop
 
-        val bottomLeftToTopRight = (0 until 8).map { Position(x = it, y = it) }
-        val topLeftToBottomRight = (7 downTo 0).map { Position(x = 7 - it, y = it ) }
-        val expectedMoves = (bottomLeftToTopRight + topLeftToBottomRight).distinct().filter { it != start }
+        val expectedMoves = (1..3).flatMap { listOf(
+            start up it left it,
+            start up it right it,
+            start down it left it,
+            start down it right it
+        ) }
 
-        assertEquals(expectedMoves, MoveEngine.possibleMoves(board, bishop))
+        assertTrue(MoveEngine.possibleMoves(board, bishop).containsAll(expectedMoves))
+    }
+
+    @Test
+    fun bishop_cant_move_through_pieces() {
+        val start = Position(x = 3, y = 3)
+        val bishop = Piece(position = start, type = PieceType.BISHOP)
+        val blockingPiece = Piece(position = start up 1 left 1)
+
+        board = Board() with bishop
+        val blockedBoard = Board() with bishop and blockingPiece
+
+        val unblockedCalculatedMoves = MoveEngine.possibleMoves(board, bishop)
+        val blockedCalculatedMoves = MoveEngine.possibleMoves(blockedBoard, bishop)
+
+        val blockedMoves = (1..3).map { start up it left it}
+
+        assertTrue(unblockedCalculatedMoves.containsAll(blockedMoves))
+        assertFalse(blockedCalculatedMoves.containsAll(blockedMoves))
+    }
+
+    @Test
+    fun knight_can_move() {
+        val start = Position(x = 3, y = 3)
+        val enemyPosition = start up 2 left 1
+        val friendPosition = start up 2 right 1
+        val knight = Piece(position = start, type = PieceType.KNIGHT, color = Color.WHITE)
+        val enemy = Piece(position = enemyPosition, color = Color.BLACK)
+        val friend = Piece(position = friendPosition, color = Color.WHITE)
+
+        board = Board() with knight and enemy and friend
+
+
     }
 
     @Test
