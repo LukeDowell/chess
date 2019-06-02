@@ -34,7 +34,7 @@ infix fun Board.and(piece: Piece): Board { this.pieces += piece; return this }
 infix fun Board.with(piece: Piece): Board { this.pieces += piece; return this }
 
 enum class Color { WHITE, BLACK; }
-enum class PieceType { PAWN, KNIGHT, BISHOP, ROOK }
+enum class PieceType { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING }
 
 data class Position(val x: Int, val y: Int)
 infix fun Position.up(i: Int): Position = Position(this.x, this.y + i)

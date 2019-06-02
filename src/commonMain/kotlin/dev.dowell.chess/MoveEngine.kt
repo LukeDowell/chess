@@ -42,12 +42,19 @@ object MoveEngine {
                 moves += potentialMoves
             }
 
-            PieceType.ROOK -> {
+            PieceType.ROOK -> { }
 
-            }
+            PieceType.QUEEN -> { }
+
+            PieceType.KING -> { }
         }
 
+        fun isFriendlyPiece(position: Position): Boolean = board.pieces
+            .find { it.position == position }
+            ?.color == piece.color
+
         return moves.filter { it.isOnBoard()  }
+            .filter { isFriendlyPiece(it) }
     }
 
     private fun Position.isOnBoard(): Boolean = this.x in 0..7 && this.y in 0..7

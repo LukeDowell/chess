@@ -103,8 +103,7 @@ class MoveEngineTests {
         val friend = Piece(position = friendPosition, color = Color.WHITE)
 
         board = Board() with knight and enemy and friend
-
-
+        assertFalse(true)
     }
 
     @Test

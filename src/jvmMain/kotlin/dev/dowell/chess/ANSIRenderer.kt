@@ -41,9 +41,11 @@ private fun Piece.toANSI(): String {
 
     val symbol = when(this.type) {
         PieceType.BISHOP -> "B"
-        PieceType.KNIGHT -> "K"
+        PieceType.KNIGHT -> "N"
         PieceType.PAWN -> "P"
         PieceType.ROOK -> "R"
+        PieceType.QUEEN -> "Q"
+        PieceType.KING -> "K"
     }
 
     return "$color$symbol"
