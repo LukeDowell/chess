@@ -24,11 +24,24 @@ object MoveEngine {
             }
 
             PieceType.BISHOP -> {
-                val topRight = (0..7).map { start up it right it }
-                val topLeft = (0..7).map { start up it left it }
-                val bottomRight = (0..7).map { start down it right it }
-                val bottomLeft = (0..7).map { start down it left it }
-                moves += (topRight + topLeft + bottomRight + bottomLeft).distinct()
+                tailrec fun moveDiagonally(xMod: Int, yMod: Int, acc: List<Position> = listOf()): List<Position> {
+                    val nextTile: Position =
+                        if (acc.isEmpty()) start moveVertically yMod moveHorizontally xMod
+                        else acc.last() moveVertically yMod moveHorizontally xMod
+
+                    if (!nextTile.isOnBoard() || nextTile.isOccupied(board)) {
+                        return acc
+                    }
+
+                    return moveDiagonally(xMod = xMod, yMod = yMod, acc = acc + nextTile)
+                }
+
+                val topLeft = moveDiagonally(xMod = -1, yMod = 1)
+                val topRight = moveDiagonally(xMod = 1, yMod = 1)
+                val bottomLeft = moveDiagonally(xMod = -1, yMod = -1)
+                val bottomRight = moveDiagonally(xMod = 1, yMod = -1)
+
+                moves += topLeft + topRight + bottomLeft + bottomRight
             }
 
             PieceType.KNIGHT -> {
@@ -54,10 +67,12 @@ object MoveEngine {
             ?.color == piece.color
 
         return moves.filter { it.isOnBoard()  }
-            .filter { isFriendlyPiece(it) }
+            .filterNot { isFriendlyPiece(it) }
     }
 
     private fun Position.isOnBoard(): Boolean = this.x in 0..7 && this.y in 0..7
+    private fun Position.isOccupied(board: Board): Boolean = board.pieces.any { it.position == this }
 
     private infix fun Position.moveVertically(i: Int): Position = this up i
+    private infix fun Position.moveHorizontally(i: Int): Position = this right i
 }
