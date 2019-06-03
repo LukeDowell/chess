@@ -94,27 +94,37 @@ class MoveEngineTests {
     }
 
     @Test
-    fun knight_can_move() {
-        val start = Position(x = 3, y = 3)
-        val enemyPosition = start up 2 left 1
-        val friendPosition = start up 2 right 1
-        val knight = Piece(position = start, type = PieceType.KNIGHT, color = Color.WHITE)
-        val enemy = Piece(position = enemyPosition, color = Color.BLACK)
-        val friend = Piece(position = friendPosition, color = Color.WHITE)
-
-        board = Board() with knight and enemy and friend
-        assertFalse(true)
-    }
-
-    @Test
     fun rook_can_move_laterally_and_vertically() {
         val start = Position(x = 3, y = 3)
         val rook = Piece(position = start, type = PieceType.ROOK)
         board = Board() with rook
 
-        val lateralMoves = (0 until 8).map { Position(x = it, y = start.y) }.filter { it == start }
-        val verticalMoves = (0 until 8).map { Position(x = start.x, y = it) }.filter { it == start }
+        val lateralMoves = (0..7).map { Position(x = it, y = 3) }
+        val verticalMoves = (0..7).map { Position(x = 3, y = it) }
+        val allMoves = (lateralMoves + verticalMoves).filter { it != start }
 
-        assertTrue(MoveEngine.possibleMoves(board, rook).containsAll(lateralMoves + verticalMoves))
+        assertTrue(MoveEngine.possibleMoves(board, rook).containsAll(allMoves))
+    }
+
+    @Test
+    fun rook_cant_move_through_pieces() {
+        val start = Position(x = 3, y = 3)
+        val blockedPosition = Position(x = 1, y = 3)
+
+        val rook = Piece(position = start, type = PieceType.ROOK)
+        val blockedPiece = Piece.at(blockedPosition)
+
+        board = Board() with rook and blockedPiece
+
+        val blockedMoves = listOf(Position(x = 1, y = 3), Position(x = 0, y = 3))
+
+        assertFalse(MoveEngine.possibleMoves(board, rook).containsAll(blockedMoves))
+    }
+
+    @Test
+    fun rook_does_not_move_through_pieces() {
+        val start = Position(x = 3, y = 3)
+        val rook = Piece(position = start, type = PieceType.ROOK)
+        board = Board() with rook
     }
 }

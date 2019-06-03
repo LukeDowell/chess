@@ -6,6 +6,21 @@ object MoveEngine {
         val start = piece.position
         val moves: MutableList<Position> = mutableListOf()
 
+        tailrec fun moveUntilBlocked(xMod: Int, yMod: Int, distance: Int = 0, acc: List<Position> = listOf()): List<Position> {
+            val from: Position = acc.lastOrNull() ?: start
+            val nextTile = from moveVertically yMod moveHorizontally xMod
+
+            if (!nextTile.isOnBoard()) return acc
+            else if (xMod == 0 && yMod == 0) return acc
+            else if (distance != 0 && acc.size >= distance) return acc
+            else board.pieces.find { it.position == nextTile }?.let {
+                return if (it.color != piece.color) acc + nextTile
+                else acc
+            }
+
+            return moveUntilBlocked(xMod = xMod, yMod = yMod, acc = acc + nextTile)
+        }
+
         when(piece.type) {
 
             PieceType.PAWN -> {
@@ -20,26 +35,14 @@ object MoveEngine {
                     start moveVertically verticalModifier right 1)
 
                 val enemies = board.pieces.filter { it.color != piece.color }
-                moves += diagonals.filter { diagonal -> enemies.any { it.position == diagonal}}
+                moves += diagonals.filter { diagonal -> enemies.any { it.position == diagonal} }
             }
 
             PieceType.BISHOP -> {
-                tailrec fun moveDiagonally(xMod: Int, yMod: Int, acc: List<Position> = listOf()): List<Position> {
-                    val nextTile: Position =
-                        if (acc.isEmpty()) start moveVertically yMod moveHorizontally xMod
-                        else acc.last() moveVertically yMod moveHorizontally xMod
-
-                    if (!nextTile.isOnBoard() || nextTile.isOccupied(board)) {
-                        return acc
-                    }
-
-                    return moveDiagonally(xMod = xMod, yMod = yMod, acc = acc + nextTile)
-                }
-
-                val topLeft = moveDiagonally(xMod = -1, yMod = 1)
-                val topRight = moveDiagonally(xMod = 1, yMod = 1)
-                val bottomLeft = moveDiagonally(xMod = -1, yMod = -1)
-                val bottomRight = moveDiagonally(xMod = 1, yMod = -1)
+                val topLeft = moveUntilBlocked(xMod = -1, yMod = 1)
+                val topRight = moveUntilBlocked(xMod = 1, yMod = 1)
+                val bottomLeft = moveUntilBlocked(xMod = -1, yMod = -1)
+                val bottomRight = moveUntilBlocked(xMod = 1, yMod = -1)
 
                 moves += topLeft + topRight + bottomLeft + bottomRight
             }
@@ -55,7 +58,14 @@ object MoveEngine {
                 moves += potentialMoves
             }
 
-            PieceType.ROOK -> { }
+            PieceType.ROOK -> {
+                val left = moveUntilBlocked(xMod = -1, yMod = 0)
+                val up = moveUntilBlocked(xMod = 0, yMod = 1)
+                val right = moveUntilBlocked(xMod = 1, yMod = 0)
+                val down = moveUntilBlocked(xMod = 0, yMod = -1)
+
+                moves += left + up + right + down
+            }
 
             PieceType.QUEEN -> { }
 
