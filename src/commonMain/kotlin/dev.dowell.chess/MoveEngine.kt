@@ -47,16 +47,7 @@ object MoveEngine {
                 moves += topLeft + topRight + bottomLeft + bottomRight
             }
 
-            PieceType.KNIGHT -> {
-                val potentialMoves = listOf(
-                    start up 2 left 1, start up 2 right 1,
-                    start right 2 up 1, start right 2 down 1,
-                    start down 2 right 1, start down 2 left 1,
-                    start left 2 up 1, start left 2 down 1)
-                    .filter { pos -> board.pieces.any { it.position == pos && it.color == piece.color } }
-
-                moves += potentialMoves
-            }
+            PieceType.KNIGHT -> { }
 
             PieceType.ROOK -> {
                 val left = moveUntilBlocked(xMod = -1, yMod = 0)
