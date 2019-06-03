@@ -18,7 +18,7 @@ object MoveEngine {
                 else acc
             }
 
-            return moveUntilBlocked(xMod = xMod, yMod = yMod, acc = acc + nextTile)
+            return moveUntilBlocked(xMod = xMod, yMod = yMod, distance = distance, acc = acc + nextTile)
         }
 
         when(piece.type) {
@@ -38,6 +38,8 @@ object MoveEngine {
                 moves += diagonals.filter { diagonal -> enemies.any { it.position == diagonal} }
             }
 
+            PieceType.KNIGHT -> { }
+
             PieceType.BISHOP -> {
                 val topLeft = moveUntilBlocked(xMod = -1, yMod = 1)
                 val topRight = moveUntilBlocked(xMod = 1, yMod = 1)
@@ -46,8 +48,6 @@ object MoveEngine {
 
                 moves += topLeft + topRight + bottomLeft + bottomRight
             }
-
-            PieceType.KNIGHT -> { }
 
             PieceType.ROOK -> {
                 val left = moveUntilBlocked(xMod = -1, yMod = 0)
@@ -71,7 +71,18 @@ object MoveEngine {
                 moves += left + up + right + down + topLeft + topRight + bottomLeft + bottomRight
             }
 
-            PieceType.KING -> { }
+            PieceType.KING -> {
+                val left = moveUntilBlocked(xMod = -1, yMod = 0, distance = 1)
+                val up = moveUntilBlocked(xMod = 0, yMod = 1, distance = 1)
+                val right = moveUntilBlocked(xMod = 1, yMod = 0, distance = 1)
+                val down = moveUntilBlocked(xMod = 0, yMod = -1, distance = 1)
+                val topLeft = moveUntilBlocked(xMod = -1, yMod = 1, distance = 1)
+                val topRight = moveUntilBlocked(xMod = 1, yMod = 1, distance = 1)
+                val bottomLeft = moveUntilBlocked(xMod = -1, yMod = -1, distance = 1)
+                val bottomRight = moveUntilBlocked(xMod = 1, yMod = -1, distance = 1)
+
+                moves += left + up + right + down + topLeft + topRight + bottomLeft + bottomRight
+            }
         }
 
         fun isFriendlyPiece(position: Position): Boolean = board.pieces

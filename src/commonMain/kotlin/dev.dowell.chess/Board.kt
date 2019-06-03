@@ -28,7 +28,7 @@ fun Board.movePiece(from: Position, to: Position): Boolean {
     }
 
     return true
-}// TODO
+}
 
 infix fun Board.and(piece: Piece): Board { this.pieces += piece; return this }
 infix fun Board.with(piece: Piece): Board { this.pieces += piece; return this }

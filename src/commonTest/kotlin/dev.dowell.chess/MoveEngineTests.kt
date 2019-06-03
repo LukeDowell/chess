@@ -146,4 +146,25 @@ class MoveEngineTests {
 
         assertTrue(MoveEngine.possibleMoves(board, queen).containsAll(allMoves))
     }
+
+    @Test
+    fun king_can_move_in_any_direction_once() {
+        val start = Position(x = 3, y = 3)
+        val king = Piece(position = start, type = PieceType.KING)
+        board = Board() with king
+
+        val expectedMoves = listOf(
+            start left 1,
+            start left 1 up 1,
+            start up 1,
+            start up 1 right 1,
+            start right 1,
+            start down 1 right 1,
+            start down 1,
+            start down 1 left 1
+        )
+
+        assertTrue(MoveEngine.possibleMoves(board, king).containsAll(expectedMoves))
+        assertEquals(expectedMoves.size, MoveEngine.possibleMoves(board, king).size)
+    }
 }
