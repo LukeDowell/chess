@@ -127,4 +127,23 @@ class MoveEngineTests {
         val rook = Piece(position = start, type = PieceType.ROOK)
         board = Board() with rook
     }
+
+    @Test
+    fun queen_can_move_laterally_and_vertically_and_diagonally() {
+        val start = Position(x = 3, y = 3)
+        val queen = Piece(position = start, type = PieceType.QUEEN)
+        board = Board() with queen
+
+        val lateralMoves = (0..7).map { Position(x = it, y = 3) }
+        val verticalMoves = (0..7).map { Position(x = 3, y = it) }
+        val diagonals = (1..3).flatMap { listOf(
+            start up it left it,
+            start up it right it,
+            start down it left it,
+            start down it right it
+        ) }
+        val allMoves = (lateralMoves + verticalMoves + diagonals).filter { it != start }
+
+        assertTrue(MoveEngine.possibleMoves(board, queen).containsAll(allMoves))
+    }
 }

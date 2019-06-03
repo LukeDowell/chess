@@ -58,7 +58,18 @@ object MoveEngine {
                 moves += left + up + right + down
             }
 
-            PieceType.QUEEN -> { }
+            PieceType.QUEEN -> {
+                val left = moveUntilBlocked(xMod = -1, yMod = 0)
+                val up = moveUntilBlocked(xMod = 0, yMod = 1)
+                val right = moveUntilBlocked(xMod = 1, yMod = 0)
+                val down = moveUntilBlocked(xMod = 0, yMod = -1)
+                val topLeft = moveUntilBlocked(xMod = -1, yMod = 1)
+                val topRight = moveUntilBlocked(xMod = 1, yMod = 1)
+                val bottomLeft = moveUntilBlocked(xMod = -1, yMod = -1)
+                val bottomRight = moveUntilBlocked(xMod = 1, yMod = -1)
+
+                moves += left + up + right + down + topLeft + topRight + bottomLeft + bottomRight
+            }
 
             PieceType.KING -> { }
         }
