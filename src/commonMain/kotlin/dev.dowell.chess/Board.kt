@@ -29,6 +29,8 @@ fun Board.movePiece(from: Position, to: Position): Boolean {
     return true
 }
 
+fun Board.pieceAt(position: Position): Piece? = this.pieces.find { it.position == position }
+
 infix fun Board.and(piece: Piece): Board {
     this.pieces += piece; return this
 }

@@ -25,3 +25,4 @@ val blackQueen = Piece(position = Position(x = 4, y = 7), color = Color.BLACK, t
 val blackKing = Piece(position = Position(x = 3, y = 7), color = Color.BLACK, type = PieceType.KING)
 val blackPieces = blackRooks + blackKnights + blackBishops + blackPawns + blackQueen + blackKing
 
+val allPieces = whitePieces + blackPieces
