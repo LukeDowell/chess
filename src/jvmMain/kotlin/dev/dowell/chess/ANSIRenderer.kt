@@ -1,7 +1,5 @@
 package dev.dowell.chess
 
-import java.lang.StringBuilder
-
 val ANSI_RESET = "\u001B[0m"
 val ANSI_BLACK = "\u001B[30m"
 val ANSI_RED = "\u001B[31m"
@@ -39,7 +37,7 @@ private fun Piece.toANSI(): String {
         if (this.color == Color.WHITE) ANSI_WHITE
         else ANSI_BLACK
 
-    val symbol = when(this.type) {
+    val symbol = when (this.type) {
         PieceType.BISHOP -> "B"
         PieceType.KNIGHT -> "N"
         PieceType.PAWN -> "P"
@@ -70,7 +68,7 @@ fun renderGame(board: Board, selected: Position? = null) {
             val pieceAt: Piece? = board.pieces.find { it.position == Position(x = x, y = y) }
             val tileContent = pieceAt?.let { "$defaultBg${it.toANSI()} $ANSI_RESET" } ?: "$defaultBg- $ANSI_RESET"
             sb.append(tileContent)
-         }
+        }
         sb.append("\n")
     }
 

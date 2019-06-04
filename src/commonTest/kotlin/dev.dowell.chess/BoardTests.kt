@@ -1,5 +1,8 @@
 import dev.dowell.chess.*
-import kotlin.test.*
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 class BoardTests {
 

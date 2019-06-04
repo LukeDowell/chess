@@ -65,12 +65,14 @@ class MoveEngineTests {
 
         board = Board() with bishop
 
-        val expectedMoves = (1..3).flatMap { listOf(
-            start up it left it,
-            start up it right it,
-            start down it left it,
-            start down it right it
-        ) }
+        val expectedMoves = (1..3).flatMap {
+            listOf(
+                start up it left it,
+                start up it right it,
+                start down it left it,
+                start down it right it
+            )
+        }
 
         assertTrue(MoveEngine.possibleMoves(board, bishop).containsAll(expectedMoves))
     }
@@ -87,7 +89,7 @@ class MoveEngineTests {
         val unblockedCalculatedMoves = MoveEngine.possibleMoves(board, bishop)
         val blockedCalculatedMoves = MoveEngine.possibleMoves(blockedBoard, bishop)
 
-        val blockedMoves = (1..3).map { start up it left it}
+        val blockedMoves = (1..3).map { start up it left it }
 
         assertTrue(unblockedCalculatedMoves.containsAll(blockedMoves))
         assertFalse(blockedCalculatedMoves.containsAll(blockedMoves))
@@ -136,12 +138,14 @@ class MoveEngineTests {
 
         val lateralMoves = (0..7).map { Position(x = it, y = 3) }
         val verticalMoves = (0..7).map { Position(x = 3, y = it) }
-        val diagonals = (1..3).flatMap { listOf(
-            start up it left it,
-            start up it right it,
-            start down it left it,
-            start down it right it
-        ) }
+        val diagonals = (1..3).flatMap {
+            listOf(
+                start up it left it,
+                start up it right it,
+                start down it left it,
+                start down it right it
+            )
+        }
         val allMoves = (lateralMoves + verticalMoves + diagonals).filter { it != start }
 
         assertTrue(MoveEngine.possibleMoves(board, queen).containsAll(allMoves))
@@ -166,5 +170,43 @@ class MoveEngineTests {
 
         assertTrue(MoveEngine.possibleMoves(board, king).containsAll(expectedMoves))
         assertEquals(expectedMoves.size, MoveEngine.possibleMoves(board, king).size)
+    }
+
+    @Test
+    fun knight_can_move() {
+        val start = Position(x = 3, y = 3)
+        val knight = Piece(position = start, type = PieceType.KNIGHT)
+
+        board = Board() with knight
+
+        val expectedMoves = listOf(
+            start up 2 left 1,
+            start up 2 right 1,
+            start left 2 up 1,
+            start left 2 down 1,
+            start down 2 left 1,
+            start down 2 right 1,
+            start right 2 down 1,
+            start right 2 up 1
+        )
+
+        assertTrue(MoveEngine.possibleMoves(board, knight).containsAll(expectedMoves))
+    }
+
+    @Test
+    fun knight_can_take_opponent_and_avoids_friend() {
+        val start = Position(x = 3, y = 3)
+        val enemyPosition = start up 2 left 1
+        val friendlyPosition = start up 2 right 1
+        val knight = Piece(position = start, color = Color.WHITE, type = PieceType.KNIGHT)
+        val friend = Piece(position = friendlyPosition, color = Color.WHITE)
+        val enemy = Piece.at(enemyPosition)
+
+        board = Board() with knight and enemy and friend
+
+        val calculatedMoves = MoveEngine.possibleMoves(board, knight)
+
+        assertTrue(calculatedMoves.contains(enemyPosition))
+        assertFalse(calculatedMoves.contains(friendlyPosition))
     }
 }
